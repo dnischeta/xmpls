@@ -38,12 +38,29 @@ int main() {
                 continue;
             }
 
-            if (expression[idx] != '+') {
-                printf("Unsupported op: %c\n", expression[idx]);
-                break;
+            switch (expression[idx]) {
+                case '+': {
+                    stack[sp - 1] = stack[sp - 1] + stack[sp];
+                    break;
+                }
+                case '-': {
+                    stack[sp - 1] = stack[sp - 1] - stack[sp];
+                    break;
+                }
+                case '*': {
+                    stack[sp - 1] = stack[sp - 1] * stack[sp];
+                    break;
+                }
+                case '/': {
+                    stack[sp - 1] = stack[sp - 1] / stack[sp];
+                    break;
+                }
+                default: {
+                    printf("Unsupported op: %c\n", expression[idx]);
+                    break;
+                }
             }
 
-            stack[sp - 1] = stack[sp - 1] + stack[sp];
             sp--;
             idx++;
         }
