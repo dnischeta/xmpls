@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI Components</title>
+    <style>
+        *,
+        *::after,
+        *::before {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+        }
+
+        .section {
+            display: grid;
+            place-items: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="section">
+            <p>
+                Card component, inspired by
+                <a href="https://ru.ariarzer.dev/tutorials/2022/easy-semantic-card-link.html" target="_blank">
+                    https://ru.ariarzer.dev/tutorials/2022/easy-semantic-card-link.html
+                </a>
+            </p>
+            <article class="card">
+                <img class="card__cover" src="404" alt="Card cover">
+                <h2 class="card__title">
+                    <a class="card__link" href="#">Card Title</a>
+                </h2>
+                <p class="card__content">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero blanditiis laboriosam veritatis in
+                    eveniet nobis est, id hic distinctio nemo, corrupti dignissimos, perferendis voluptatum laudantium
+                    aliquam labore? Odit, quo voluptatibus?
+                </p>
+                <button class="card__button">Open</button>
+                <button class="card__button">Like</button>
+            </article>
+            <style>
+                .card {
+                    position: relative;
+                    z-index: 0;
+                    padding: 1rem;
+                    border: 1px solid gray;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+
+                .card:has(.card__link:hover),
+                .card:has(.card__button:hover) {
+                    background: plum;
+                }
+
+                .card__link::after {
+                    content: '';
+                    position: absolute;
+                    inset: 0;
+                    z-index: -1;
+                }
+
+                .card__cover,
+                .card__content {
+                    pointer-events: none;
+                }
+            </style>
+        </div>
+    </main>
+</body>
+
+</html>
