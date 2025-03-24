@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buttons Wheel</title>
+    <style>
+        section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .wheel {
+            position: relative;
+            width: 178px;
+            height: 178px;
+            
+            border: 1px solid red;
+        }
+
+        .wheel-btn {
+            position: absolute;
+            transform: translate(-50%, -50%);
+
+            cursor: pointer;
+        }
+
+        .wheel-btn:hover svg path, 
+        .wheel-btn:focus-visible svg path {
+            fill: #1B4DFF;
+        }
+
+        .wheel-btn svg {
+            position: absolute;
+        }
+
+        .wheel-btn svg path {
+            transition: fill 0.1s ease-in;
+            fill: #728FE8;
+            stroke: white;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Button Wheel</h1>
+        <section>
+            <div class="wheel wheel-2">
+                <button class="wheel-btn">1</button>
+                <button class="wheel-btn">2</button>
+            </div>
+            <div class="wheel wheel-3">
+                <button class="wheel-btn">1</button>
+                <button class="wheel-btn">2</button>
+                <button class="wheel-btn">3</button>
+            </div>
+            <div class="wheel wheel-4">
+                <button class="wheel-btn">1</button>
+                <button class="wheel-btn">2</button>
+                <button class="wheel-btn">3</button>
+                <button class="wheel-btn">4</button>
+            </div>
+            <div class="wheel wheel-5">
+                <button class="wheel-btn">1</button>
+                <button class="wheel-btn">2</button>
+                <button class="wheel-btn">3</button>
+                <button class="wheel-btn">4</button>
+                <button class="wheel-btn">5</button>
+            </div>
+            <div class="wheel wheel-6">
+                <button class="wheel-btn">1</button>
+                <button class="wheel-btn">2</button>
+                <button class="wheel-btn">3</button>
+                <button class="wheel-btn">4</button>
+                <button class="wheel-btn">5</button>
+                <button class="wheel-btn">6</button>
+            </div>
+        </section>
+    </main>
+    <script>
+        function initButtonWheel(container) {
+
+            const el$ = document.querySelector(container);
+            if (!el$) {
+                return;
+            }
+            const R = el$.clientWidth / 2;
+            const r = R - 40;
+            const buttons = el$.querySelectorAll('button');
+            const sectorsQty = buttons.length;
+            const sectorSize = 2 * Math.PI / sectorsQty;
+            const rMean = r + (R - r) * 0.5;
+            let sectorIdx = 0;
+
+            const radiansShift = sectorsQty === 3
+                ? (5/6) * Math.PI
+                : Math.PI;
+
+            for (const b of buttons) {
+                const phi = sectorIdx * sectorSize - radiansShift;
+                const x = Math.cos(phi) * rMean;
+                const y = Math.sin(phi) * rMean;
+                const top = R + y;
+                const left = R + x;
+
+                b.style.top = `${top}px`;
+                b.style.left = `${left}px`;
+
+                const tile = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                tile.setAttribute('viewbox', `0 0 ${2 * R} ${2 * R}`);
+                tile.style.pointerEvents = 'none';
+                tile.style.width = `${2 * R}px`;
+                tile.style.height = `${2 * R}px`;
+                tile.style.top = `${-1 * top + 0.5 * b.clientHeight}px`;
+                tile.style.left = `${-1 * left + 0.5 * b.clientWidth}px`;
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+                const tilePhiStart = phi + 0.5 * sectorSize;
+                const tilePhiEnd = phi - 0.5 * sectorSize;
+                const tileXStart = R * Math.cos(tilePhiStart);
+                const tileYStart = R * Math.sin(tilePhiStart);
+                const tileXEnd = R * Math.cos(tilePhiEnd);
+                const tileYEnd = R * Math.sin(tilePhiEnd);
+
+                const d = `
+                    M ${R + tileXStart} ${R + tileYStart}
+                    L ${R + (r / R) * tileXStart} ${R + (r / R) * tileYStart}
+                    A ${r} ${r} 0 0 0 ${R + (r / R) * tileXEnd} ${R + (r / R) * tileYEnd}
+                    L ${R + tileXEnd} ${R + tileYEnd}
+                    A ${R} ${R} 0 0 1 ${R + tileXStart} ${R + tileYStart}
+                    Z
+                `;
+
+                path.setAttribute('d', d);
+                path.style.pointerEvents = 'auto';
+                tile.appendChild(path);
+                b.appendChild(tile);
+
+                b.addEventListener('click', (event) => {
+                    console.log(`Click button #${b.innerText}`, event);
+                });
+
+                sectorIdx++;
+            }
+        }
+
+        initButtonWheel('.wheel-1');
+        initButtonWheel('.wheel-2');
+        initButtonWheel('.wheel-3');
+        initButtonWheel('.wheel-4');
+        initButtonWheel('.wheel-5');
+        initButtonWheel('.wheel-6');
+    </script>
+</body>
+</html>
